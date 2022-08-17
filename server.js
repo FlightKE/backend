@@ -1,7 +1,18 @@
 const express = require('express');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser')
+
+
+const users = require('./routes/api/users');
+const profile = require('./routes/api/profile');
+const flight = require('./routes/api/flight');
+
 
 const app = express()
+
+//body parser middleware
+app.use(bodyParser.urlencoded({extended:false}))
+app.use(bodyParser.json())
 
 //DB config 
 const db = require('./config/keys').mongoURI;
@@ -12,6 +23,11 @@ mongoose
    .connect(db)
    .then(() => console.log("MongoDB connected"))
    .catch(err => console.log(err))
+
+//use routes 
+app.use('/api/users', users);
+app.use('/api/profile', profile);
+app.use('/api/flight', flight)
 
 app.get ('/', (req, res) => res.send('Hello'));
 
