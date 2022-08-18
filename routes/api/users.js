@@ -1,8 +1,7 @@
-const express = require('express');
-const router = express.Router();
+
+const router = require('express').Router();
 const gravatar = require('gravatar')
 const bcrypt = require('bcryptjs')
-
 
 // load User model
 const User = require('../../models/Users')
@@ -10,9 +9,23 @@ const User = require('../../models/Users')
 
 router.get('/test', (req, res) => res.json({msg: 'Users works'}));
 
-//registration
-router.post('/register', (req, res) => {
-    User.findOne({ email: req.body.email})
+//get all users 
+router.route('/').get((req,res) => {
+    User.find()
+    .then(users => res.json(users))
+    .catch(err => res.status(400).json('Error:' + err))
+});
+
+//get one user 
+router.route('/:id').get((req,res) => {
+    User.findById(req.params.id)
+    .then(user => res.json(user))
+    .catch(err => res.status(400).json('Error:' + err))
+})
+
+//register a user 
+router.route('/register').post((req,res) => {
+   User.findOne({ email: req.body.email})
     .then(user => {
         if (user) {
             return res.status(400).json({email:'email already exist'})
@@ -22,26 +35,78 @@ router.post('/register', (req, res) => {
                 r:  'pg',
                 d:  'mm'
             })
-            const newUser = new User({
-                name: req.body.username,
-                email: req.body.email,
-                avatar,
-                password: req.body.password
-            });
+    const newUser = new User({
+        name: req.body.name,
+        email: req.body.email,
+        avatar,
+        password: req.body.password
+    });
 
-            bcrypt.genSalt( 10, () => (err,salt) => {
-                bcrypt.hash(newUser.password, salt, (err, hash) => {
-                    if(err) throw err;
-                    newUser.password = hash;
-                    newUser.save()
-                       .then(user => res.json(user))
-                       .catch(err => console.log(err))
-                })
-            })
-        }
+    newUser.save()
+    .then(() => res.json('User added!'))
+    .catch(err => res.status(400).json('Error:' + err));
+}
 })
 
+})
+
+//update a user 
+
+router.route('/update/:id').post(( req, res) => {
+    User.findById(req.params.id)
+    .then(user => {
+        user.name = req.body.name;
+        user.email = req.body.email;
+        user.avatar = req.body.avatar;
+        user.password = req.body.password;
+
+        user.save()
+        .then(() => res.json('User updated!'))
+        .catch(err => res.status(400).json('Error:' + err))
+    })
+
+    .catch(err => res.status(400).json('Error: ' + err));
 });
+
+//delete a user
+
+router.route('/:id').delete((req,res) => {
+    User.findByIdAndDelete(req.params.id)
+    .then(() => res.json ('User deleted.'))
+    .catch(err => res.status(400).json('Error:' + err ))
+})
+
+// router.route('/add').post((req, res) => {
+//     User.findOne({ email: req.body.email})
+//     .then(user => {
+//         if (user) {
+//             return res.status(400).json({email:'email already exist'})
+//         }else{
+//             const avatar = gravatar.url(req.body.email, {
+//                 s: '200',
+//                 r:  'pg',
+//                 d:  'mm'
+//             })
+//             const newUser = new User({
+//                 name: req.body.name,
+//                 email: req.body.email,
+//                 avatar,
+//                 password: req.body.password
+//             });
+
+//             bcrypt.genSalt( 10, () => (err,salt) => {
+//                 bcrypt.hash(newUser.password, salt, (err, hash) => {
+//                     if(err) throw err;
+//                     newUser.password = hash;
+//                     newUser.save()
+//                        .then(user => res.json(user))
+//                        .catch(err => console.log(err))
+//                 })
+//             })
+//         }
+// })
+
+// });
 
 
 
