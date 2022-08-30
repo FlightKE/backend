@@ -45,6 +45,16 @@ router.route('/register').post((req,res) => {
     newUser.save()
     .then(() => res.json('User added!'))
     .catch(err => res.status(400).json('Error:' + err));
+
+    bcrypt.genSalt(10,(err,salt) => {
+        bcrypt.hash(newUser.password, salt, (err,hash) =>{
+            if(err) throw err;
+            newUser.password = hash;
+            newUser.save()
+              .then(user => res.json(user))
+              .then(err => console.log(err))
+        })
+    })
 }
 })
 
@@ -52,7 +62,7 @@ router.route('/register').post((req,res) => {
 
 //update a user 
 
-router.route('/update/:id').post(( req, res) => {
+router.route('/:id').put(( req, res) => {
     User.findById(req.params.id)
     .then(user => {
         user.name = req.body.name;

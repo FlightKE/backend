@@ -33,7 +33,7 @@ app.use('/api/users', users);
 app.use('/api/profile', profile);
 app.use('/api/flight', flight)
 
-app.get ('/', (req, res) => res.send('Hello'));
+
 
 const port = process.env.PORT || 5000;
 
