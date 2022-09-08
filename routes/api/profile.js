@@ -98,7 +98,7 @@ passport.authenticate('jwt', { session: false}),
         })
       })
 
-      //add education route 
+      //add education to profile 
       router.post('/education', passport.authenticate('jwt', {session: false}), (req, res) => {
         Profile.findOne({user: req.user.id})
         .then(profile => {
