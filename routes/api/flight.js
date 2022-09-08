@@ -11,9 +11,14 @@ const Profile = require('../../models/Profile')
 
 router.get('/test', (req, res) => res.json({msg: 'flight works'}));
 
+//get all flights
+router.route('/').get((req,res) => {
+    Flight.find()
+    .then(flights => res.json(flights))
+    .catch(err => res.status(400).json('Error:' + err))
+});
 
 //create flight 
-
 router.post('/', 
 passport.authenticate('jwt', {session:false}), 
 (req, res) => {
@@ -28,7 +33,7 @@ passport.authenticate('jwt', {session:false}),
 })
 
 //update a flight
-router.put('/:id').put(( req, res) => {
+router.route('/:id').put(( req, res) => {
     Flight.findById(req.params.id)
     .then(flight => {
         flight.text = req.body.text;

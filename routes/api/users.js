@@ -12,7 +12,7 @@ router.get('/test', (req, res) => res.json({msg: 'Users works'}));
 //get all users 
 router.route('/').get((req,res) => {
     User.find()
-    .then(users => res.json(users))
+    .then(flights => res.json(flights))
     .catch(err => res.status(400).json('Error:' + err))
 });
 
