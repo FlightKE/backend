@@ -18,6 +18,11 @@ app.use(bodyParser.urlencoded({extended:false}))
 app.use(bodyParser.json())
 app.use(cors())
 
+//use routes 
+app.use('/api/users', users);
+app.use('/api/profile', profile);
+app.use('/api/flight', flight)
+
 //DB config 
 const db = require('./config/keys').mongoURI;
 
@@ -28,10 +33,10 @@ mongoose
    .then(() => console.log("MongoDB connected"))
    .catch(err => console.log(err))
 
-//use routes 
-app.use('/api/users', users);
-app.use('/api/profile', profile);
-app.use('/api/flight', flight)
+// //use routes 
+// app.use('/api/users', users);
+// app.use('/api/profile', profile);
+// app.use('/api/flight', flight)
 
 
 

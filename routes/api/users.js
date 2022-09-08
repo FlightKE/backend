@@ -25,6 +25,8 @@ router.route('/:id').get((req,res) => {
 
 //register a user 
 router.route('/register').post((req,res) => {
+    debugger;
+    console.log(req.body)
    User.findOne({ email: req.body.email})
     .then(user => {
         if (user) {
@@ -46,15 +48,15 @@ router.route('/register').post((req,res) => {
     .then(() => res.json('User added!'))
     .catch(err => res.status(400).json('Error:' + err));
 
-    bcrypt.genSalt(10,(err,salt) => {
-        bcrypt.hash(newUser.password, salt, (err,hash) =>{
-            if(err) throw err;
-            newUser.password = hash;
-            newUser.save()
-              .then(user => res.json(user))
-              .then(err => console.log(err))
-        })
-    })
+    // bcrypt.genSalt(10,(err,salt) => {
+    //     bcrypt.hash(newUser.password, salt, (err,hash) =>{
+    //         if(err) throw err;
+    //         newUser.password = hash;
+    //         newUser.save()
+    //           .then(user => res.json(user))
+    //           .then(err => console.log(err))
+    //     })
+    // })
 }
 })
 
