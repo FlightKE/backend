@@ -62,6 +62,21 @@ router.route('/register').post((req,res) => {
 
 })
 
+//login a user 
+router.post('/login', (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    //find user by email
+    User.findOne({email})
+    .then(user =>{
+        //check for user
+        if(!user) {
+            return res.status(404).json({email: 'User not found'})
+        }
+    });
+});
+
 //update a user 
 
 router.route('/:id').put(( req, res) => {
